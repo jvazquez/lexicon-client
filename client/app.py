@@ -36,6 +36,7 @@ class Window(Frame):
         self.master = master
         self.label_check = None
         self.frame_controls = None
+        self.save_label = None
         self.init_window()
 
     # Creation of init_window
@@ -148,9 +149,15 @@ class Window(Frame):
                            len(data_as_bytes)
                         )
         try:
-            response = urllib.request.urlopen(request)
+            if self.save_label:
+                self.save_label.destroy()
+            urllib.request.urlopen(request)
+            self.save_label = Label(self.frame_controls, text='Saved!')
         except HTTPError:
             logger.exception('Error saving term.')
+            self.save_label = Label(self.frame_controls, text='Error saving')
+
+        self.save_label.pack()
 
 
 root = Tk()
